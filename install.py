@@ -24,7 +24,26 @@ if not os.path.exists(model_path):
     download(model_url, model_path)
 
 try:
-    subprocess.run(["pip", "install", "-r", req_file], check=True)
+
+    if sys.prefix != sys.base_prefix:
+
+        venv_path = sys.prefix
+
+        if sys.platform == "win32":
+
+            pip_path = os.path.join(venv_path, "Scripts", "pip.exe")
+        else:
+
+            pip_path = os.path.join(venv_path, "bin", "pip")
+        
+
+        subprocess.run([pip_path, "install", "-r", req_file], check=True)
+
+
+    else:
+
+        subprocess.run(["pip", "install", "-r", req_file], check=True)
+          
 except subprocess.CalledProcessError as e:
     print(f"Failed to install requirements: {e.stderr.decode('utf-8')}")
     sys.exit(1)
